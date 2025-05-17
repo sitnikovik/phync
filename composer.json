@@ -1,0 +1,42 @@
+{
+    "name": "sitnikovik/phync",
+    "description": "Lightweight synchronization primitives",
+    "keywords": [
+        "mutex",
+        "semaphore",
+        "lock",
+        "synchronization",
+        "primitives",
+        "synchronization",
+        "sync",
+        "lock",
+        "flock",
+        "atomic"
+    ],
+    "homepage": "https://github.com/sitnikovik/phync",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sitnikovik\\Phync\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Sitnikovik\\Phync\\Test\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Ilya Sitnikov",
+            "email": "sitnikovik@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    }
+}
