@@ -10,7 +10,9 @@ if ($argc < 2) {
 }
 
 $counterFile = $argv[1];
-$mutex = new FileMutex();
+
+$lockFile = sys_get_temp_dir() . 'mutex.lock';
+$mutex = new FileMutex($lockFile);
 
 $mutex->lock();
 

@@ -18,13 +18,6 @@ use RuntimeException;
 final class FileMutex implements Mutex
 {
     /**
-     * The path to the lock file.
-     * 
-     * @var string
-     */
-    private string $path;
-
-    /**
      * The flag indicating whether the mutex is currently locked.
      * 
      * @var bool
@@ -40,11 +33,12 @@ final class FileMutex implements Mutex
 
     /**
      * Creates a new instance of the FileMutex class.
+     * 
+     * @param string $path The path to the lock file.
      */
-    public function __construct()
-    {
-        $this->path = sys_get_temp_dir() . '/mutex.lock';
-    }
+    public function __construct(
+        private string $path
+    ) {}
 
     /**
      * Blocks for the writing.

@@ -12,6 +12,27 @@ use Sitnikovik\Phync\Mutex\FileMutex;
 final class FileMutexTest extends TestCase
 {
     /**
+     * The path to the lock file used for testing.
+     *
+     * @var string
+     */
+    private string $lockFilePath;
+
+    /** 
+     * Setups the test environment.
+     * 
+     * @return void
+     */
+    protected function setUp(): void
+    {
+        $this->lockFilePath = sprintf(
+            '%s/mutex-%s.lock',
+            sys_get_temp_dir(),
+            uniqid('', true)
+        );
+    }
+
+    /**
      * Test the lock method throwns an exception on double lock.
      *
      * @return void
@@ -21,7 +42,7 @@ final class FileMutexTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Lock already acquired');
 
-        $mutex = new FileMutex();
+        $mutex = new FileMutex($this->lockFilePath);
 
         $mutex->lock();
         $mutex->lock();
@@ -37,7 +58,7 @@ final class FileMutexTest extends TestCase
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Lock not acquired');
 
-        $mutex = new FileMutex();
+        $mutex = new FileMutex($this->lockFilePath);
 
         $mutex->lock();
         $mutex->unlock();
@@ -51,7 +72,7 @@ final class FileMutexTest extends TestCase
      */
     public function testTryLockReturnsTrueOnFirstLockAttempt(): void
     {
-        $mutex = new FileMutex();
+        $mutex = new FileMutex($this->lockFilePath);
 
         $this->assertTrue($mutex->tryLock());
     }
@@ -63,7 +84,7 @@ final class FileMutexTest extends TestCase
      */
     public function testTryLockReturnsFalseWhenLockIsAlreadyAcquired(): void
     {
-        $mutex = new FileMutex();
+        $mutex = new FileMutex($this->lockFilePath);
 
         $this->assertTrue($mutex->tryLock());
         $this->assertFalse($mutex->tryLock());
