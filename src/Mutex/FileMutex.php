@@ -18,13 +18,6 @@ use RuntimeException;
 final class FileMutex implements Mutex
 {
     /**
-     * The delay in microseconds before retrying to acquire the lock.
-     * 
-     * @var int
-     */
-    private const RETRY_MS = 1 * 1_000_000;
-
-    /**
      * The path to the lock file.
      * 
      * @var string
@@ -39,11 +32,18 @@ final class FileMutex implements Mutex
     private bool $locked = false;
 
     /**
+     * The file pointer for the lock file.
+     * 
+     * @var resource
+     */
+    private $fp;
+
+    /**
      * Creates a new instance of the FileMutex class.
      */
     public function __construct()
     {
-        $this->path = sys_get_temp_dir() . 'mutex.lock';
+        $this->path = sys_get_temp_dir() . '/mutex.lock';
     }
 
     /**
@@ -60,15 +60,13 @@ final class FileMutex implements Mutex
             throw new RuntimeException('Lock already acquired');
         }
 
-        $fp = fopen($this->path, 'c');
-        if (!$fp) {
-            fclose($fp);
-            throw new RuntimeException('Failed to create lock');
+        $this->fp = fopen($this->path, 'c');
+        if (!$this->fp) {
+            throw new RuntimeException('Failed to open lock file');
         }
 
-        while (!flock($fp, LOCK_EX | LOCK_NB)) {
-            echo "Waiting for lock...\n";
-            usleep(self::RETRY_MS);
+        while (!flock($this->fp, LOCK_EX)) {
+            // spin
         }
 
         $this->locked = true;
@@ -88,14 +86,13 @@ final class FileMutex implements Mutex
             throw new RuntimeException('Lock not acquired');
         }
 
-        $fp = fopen($this->path, 'c');
-        if (!flock($fp, LOCK_UN)) {
-            fclose($fp);
+        if (!flock($this->fp, LOCK_UN)) {
+            fclose($this->fp);
             throw new RuntimeException('Failed to unlock');
         }
 
         $this->locked = false;
-        fclose($fp);
+        fclose($this->fp);
     }
 
     /**
@@ -109,18 +106,18 @@ final class FileMutex implements Mutex
             return false;
         }
 
-        $fp = fopen($this->path, 'c');
-        if (!$fp) {
-            throw new RuntimeException("Cannot open lock file");
+        $this->fp = fopen($this->path, 'c');
+        if (!$this->fp) {
+            throw new RuntimeException('Failed to open lock file');
         }
 
-        if (flock($fp, LOCK_EX | LOCK_NB)) {
+        if (flock($this->fp, LOCK_EX | LOCK_NB)) {
             $this->locked = true;
             return true;
         }
 
         $this->locked = false;
-        fclose($fp);
+        fclose($this->fp);
         return false;
     }
 }
