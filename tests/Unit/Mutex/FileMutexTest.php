@@ -1,6 +1,6 @@
 <?php
 
-namespace Sitnikovik\Phync\Test\Mutex;
+namespace Sitnikovik\Phync\Test\Unit\Mutex;
 
 use RuntimeException;
 use PHPUnit\Framework\TestCase;
