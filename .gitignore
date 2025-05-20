@@ -6,6 +6,7 @@
 
 composer.phar
 /vendor/
+/tmp/
 
 .phpunit.result.cache
 
