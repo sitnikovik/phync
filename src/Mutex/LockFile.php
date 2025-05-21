@@ -12,10 +12,14 @@ namespace Sitnikovik\Phync\Mutex;
 use RuntimeException;
 
 /**
- * A mutex (short for mutual exclusion) is a synchronization primitive used to control access
- * to a shared resource in concurrent environments.
+ * LockFile class implements a mutex using a lock file.
+ * 
+ * Mutex is a synchronization primitive used to control access to a shared resource
+ * in concurrent environments. It ensures that only one process or thread can access
+ * the critical section of code or resource at a time to prevent.
+ * 
  */
-final class FileMutex implements Mutex
+final class LockFile implements Mutex
 {
     /**
      * The flag indicating whether the mutex is currently locked.
@@ -32,7 +36,7 @@ final class FileMutex implements Mutex
     private $fp;
 
     /**
-     * Creates a new instance of the FileMutex class.
+     * Creates a new instance of the LockFile class.
      * 
      * @param string $path The path to the lock file.
      */

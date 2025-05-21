@@ -6,13 +6,13 @@ use RuntimeException;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for FileMutex class.
+ * Test for LockFile class.
  * 
- * This test checks the functionality of the FileMutex class by simulating
+ * This test checks the functionality of the LockFile class by simulating
  * concurrent access to a shared file resource. It ensures that the mutex
  * correctly protects the shared
  */
-final class FileMutexConcurrencyTest extends TestCase
+final class LockFileConcurrencyTest extends TestCase
 {
     /**
      * The temporary directory for the test.

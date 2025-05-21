@@ -1,6 +1,6 @@
 <?php
 
-use Sitnikovik\Phync\Mutex\FileMutex;
+use Sitnikovik\Phync\Mutex\LockFile;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -12,7 +12,7 @@ if ($argc < 2) {
 $counterFile = $argv[1];
 
 $lockFile = sys_get_temp_dir() . '/mutex.lock';
-$mutex = new FileMutex($lockFile);
+$mutex = new LockFile($lockFile);
 
 $mutex->lock();
 
