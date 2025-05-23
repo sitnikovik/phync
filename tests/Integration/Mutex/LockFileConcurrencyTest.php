@@ -27,7 +27,14 @@ final class LockFileConcurrencyTest extends TestCase
      * @var string
      */
     private string $tmpDir;
-    
+
+    /**
+     * The path to the lock file used for testing.
+     * 
+     * @var string
+     */
+    private string $lockFile;
+
     /**
      * The path to the counter file used for testing.
      * 
@@ -52,6 +59,8 @@ final class LockFileConcurrencyTest extends TestCase
         $this->tmpDir = sys_get_temp_dir() . '/phync_test_' . uniqid();
         mkdir($this->tmpDir);
 
+        $this->lockFile = $this->tmpDir . '/mutex.lock';
+
         $this->counterFile = $this->tmpDir . '/counter.txt';
         file_put_contents($this->counterFile, '0');
 
@@ -73,7 +82,7 @@ final class LockFileConcurrencyTest extends TestCase
             unlink($this->counterFile);
         }
 
-        $lockFile = sys_get_temp_dir() . '/mutex.lock';
+        $lockFile = $this->tmpDir . '/mutex.lock';
         if (file_exists($lockFile)) {
             unlink($lockFile);
         }
@@ -93,7 +102,15 @@ final class LockFileConcurrencyTest extends TestCase
         $children = [];
 
         for ($i = 0; $i < 100; $i++) {
-            $children[] = popen("php {$this->script} {$this->counterFile}", 'r');
+            $children[] = popen(
+                sprintf(
+                    'php %s %s %s',
+                    $this->script,
+                    $this->counterFile,
+                    $this->lockFile
+                ),
+                'r'
+            );
         }
 
         foreach ($children as $child) {

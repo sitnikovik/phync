@@ -11,15 +11,13 @@ use Sitnikovik\Phync\Mutex\LockFile;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-if ($argc < 2) {
-    fwrite(STDERR, "Usage: php increment_with_mutex.php /path/to/counter.txt\n");
+if ($argc < 3) {
+    fwrite(STDERR, "Usage: php increment_with_mutex.php /path/to/counter.txt /path/to/mutex.lock\n");
     exit(1);
 }
 
 $counterFile = $argv[1];
-
-$lockFile = sys_get_temp_dir() . '/mutex.lock';
-$mutex = new LockFile($lockFile);
+$mutex = new LockFile($argv[2]);
 
 $mutex->lock();
 
