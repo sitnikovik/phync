@@ -93,7 +93,7 @@ final class LockFileConcurrencyTest extends TestCase
     }
 
     /**
-     * Test that the mutex protects the shared file from
+     * Test that the mutex protects the shared file from race condition.
      * 
      * @return void
      */

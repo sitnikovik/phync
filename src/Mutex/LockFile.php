@@ -17,7 +17,6 @@ use RuntimeException;
  * Mutex is a synchronization primitive used to control access to a shared resource
  * in concurrent environments. It ensures that only one process or thread can access
  * the critical section of code or resource at a time to prevent.
- * 
  */
 final class LockFile implements Mutex
 {
@@ -64,7 +63,10 @@ final class LockFile implements Mutex
         }
 
         while (!flock($this->fp, LOCK_EX)) {
-            // spin
+            // spin without sleeping. 
+            // sleeps can schedule other processes to run
+            // and we don't want to give up the lock
+            // to other processes
         }
 
         $this->locked = true;
@@ -74,6 +76,7 @@ final class LockFile implements Mutex
      * Unlocks the mutex.
      * 
      * This method removes the lock file, allowing other processes to acquire the lock.
+     * Not deletes the lock file itself, but releases the lock on it.
      * 
      * @return void
      * @throws RuntimeException if the lock file cannot be deleted or does not exist.

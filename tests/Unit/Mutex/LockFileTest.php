@@ -40,7 +40,7 @@ final class LockFileTest extends TestCase
     }
 
     /**
-     * Test the lock method throwns an exception on double lock.
+     * Test the lock method throws an exception on double lock.
      *
      * @return void
      */
